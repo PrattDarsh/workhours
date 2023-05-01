@@ -20,10 +20,12 @@ mongoose.connect(
 );
 
 const entrySchema = new mongoose.Schema({
-  day: String,
+  day: Number,
   start: String,
   end: String,
   duration: String,
+  totalHours: Number,
+  totalMinutes: Number,
 });
 
 const entry = new mongoose.model("entry", entrySchema);
@@ -34,14 +36,25 @@ app.get("/", (req, res) => {
 
 app.post("/submit", (req, res) => {
   console.log(req.body);
-  const newEntry = new entry({
-    // day: req.body.Name,
-    start: req.body.start,
-    end: req.body.end,
-    duration: req.body.result,
-  });
 
-  newEntry.save();
+  entry.findOne({ day: req.body.day - 1 }).then((prevDay) => {
+    console.log(prevDay);
+    const totalHoursForTheDay = prevDay.totalHours + req.body.totalHours;
+    const totalMinsForTheDay = prevDay.totalMinutes + req.body.totalMinutes;
+
+    const newEntry = new entry({
+      day: req.body.day,
+      start: req.body.start,
+      end: req.body.end,
+      duration: req.body.result,
+      totalHours: totalHoursForTheDay,
+      totalMinutes: totalMinsForTheDay,
+    });
+
+    newEntry.save().then(() => {
+      console.log("done");
+    });
+  });
 });
 
 app.listen(process.env.PORT || 3000, (req, res) => {

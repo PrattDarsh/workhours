@@ -17,17 +17,22 @@
                 <div class="text-2xl">hours</div>
             </div>
             <div class="card bg-gray-900 relative px-4 py-8  rounded-3xl">
-                <p class="absolute text-7xl top-0 font-bold text-gray-700">1</p>
+
 
                 <form action="/submit" method="post">
+                    <input type="hidden" id="totalHours" name="totalHours">
+                    <input type="hidden" id="totalMinutes" name="totalMinutes">
+                    <input id="day" name="day" type="number"
+                        class="absolute text-7xl top-0 font-bold text-gray-700 bg-transparent max-w-xs focus:outline-none"
+                        value="1">
                     <input name="result"
-                        class="text-2xl text-center text-7xl font-bold text-green-500 bg-transparent max-w-md mx-auto text-center"
-                        id="result" value="00">
+                        class="text-2xl text-center text-7xl focus:outline-none font-bold text-green-500 bg-transparent max-w-md mx-auto text-center"
+                        id="result" value="00" readonly>
                     <div class="flex items-center justify-center space-x-4 mt-6"> <input type="time" id="start"
                             name="start"
-                            class="border-2 bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl"><input
+                            class="border-2 w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none"><input
                             type="time" id="end" name="end"
-                            class="border-2 bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl">
+                            class="border-2  w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none">
                     </div>
 
                     <button
@@ -41,6 +46,12 @@
     </section>
 
     <script>
+        // window.onload = () => {
+        //     today = new Date()
+        //     today = today.getDate()
+        //     document.getElementById('day').value = today
+        // }
+
         const input1 = document.getElementById("start");
         const input2 = document.getElementById("end");
 
@@ -70,7 +81,23 @@
             const result = document.getElementById("result");
             result.value = ` ${hours}:${minutes}`;
 
+
+
         }
+
+        function durationAdder() {
+            totalHours = document.getElementById('totalHours')
+            totalMinutes = document.getElementById('totalMinutes')
+
+            totalHours += hours;
+            totalMinutes += minutes;
+
+            totalHours += Math.floor(totalMinutes / 60);
+            totalMinutes %= 60;
+        }
+
+
+
 
 
 
@@ -82,6 +109,14 @@
         // document.getElementById(id).classList.toggle('hidden')
 
         // }
+
+        window.onload = () => {
+            today = new Date()
+            today = today.getDate()
+            document.getElementById('day').value = today
+        }
+
+
     </script>
 
 
