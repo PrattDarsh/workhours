@@ -21,38 +21,48 @@ mongoose.connect(
 
 const entrySchema = new mongoose.Schema({
   day: Number,
-  start: String,
-  end: String,
-  duration: String,
-  totalHours: Number,
-  totalMinutes: Number,
+  start: Number,
+  end: Number,
+  duration: Number,
+
+  // totalDuration: Number,
 });
 
 const entry = new mongoose.model("entry", entrySchema);
 
 app.get("/", (req, res) => {
-  res.render("index", {});
+  userHours = 0;
+  entry.find().then((allDays) => {
+    allDays.forEach((day) => {
+      userHours += day.duration;
+    });
+    res.render("index", {
+      totalHours: userHours,
+      allDays: allDays,
+    });
+  });
 });
 
 app.post("/submit", (req, res) => {
+  totalHours = 0;
   console.log(req.body);
+  const newEntry = new entry({
+    day: req.body.day,
+    start: req.body.start,
+    end: req.body.end,
+    duration: req.body.result,
+    // totalDuration: prevDay.result + req.body.result,
+  });
 
-  entry.findOne({ day: req.body.day - 1 }).then((prevDay) => {
-    console.log(prevDay);
-    const totalHoursForTheDay = prevDay.totalHours + req.body.totalHours;
-    const totalMinsForTheDay = prevDay.totalMinutes + req.body.totalMinutes;
-
-    const newEntry = new entry({
-      day: req.body.day,
-      start: req.body.start,
-      end: req.body.end,
-      duration: req.body.result,
-      totalHours: totalHoursForTheDay,
-      totalMinutes: totalMinsForTheDay,
-    });
-
-    newEntry.save().then(() => {
-      console.log("done");
+  newEntry.save().then(() => {
+    entry.find().then((allDaysRefreshed) => {
+      allDaysRefreshed.forEach((day) => {
+        totalHours += day.duration;
+      });
+      res.render("index", {
+        totalHours: totalHours,
+        allDays: allDaysRefreshed,
+      });
     });
   });
 });

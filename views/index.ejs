@@ -11,38 +11,75 @@
 
 <body class="bg-black text-white ">
     <section class="max-w-6xl mx-auto py-20">
-        <div class="flex items-center justify-center space-x-12">
+        <div class="grid md:grid-cols-3 items-center justify-center md:space-x-12">
             <div class="text-center text-white rounded-full border-green-500 border-8 py-12 px-14">
-                <div class="text-9xl font-bold text-green-500">20</div>
+                <div class="text-7xl font-bold text-green-500">
+                    <%=totalHours%>
+                </div>
                 <div class="text-2xl">hours</div>
             </div>
-            <div class="card bg-gray-900 relative px-4 py-8  rounded-3xl">
 
 
-                <form action="/submit" method="post">
-                    <input type="hidden" id="totalHours" name="totalHours">
-                    <input type="hidden" id="totalMinutes" name="totalMinutes">
-                    <input id="day" name="day" type="number"
-                        class="absolute text-7xl top-0 font-bold text-gray-700 bg-transparent max-w-xs focus:outline-none"
-                        value="1">
-                    <input name="result"
-                        class="text-2xl text-center text-7xl focus:outline-none font-bold text-green-500 bg-transparent max-w-md mx-auto text-center"
-                        id="result" value="00" readonly>
-                    <div class="flex items-center justify-center space-x-4 mt-6"> <input type="time" id="start"
-                            name="start"
-                            class="border-2 w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none"><input
-                            type="time" id="end" name="end"
-                            class="border-2  w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none">
-                    </div>
 
-                    <button
-                        class=" py-3 px-6 w-full rounded-full mt-4 text-lg hover:bg-green-500 border-2 border-green-500 transition delay-15">Check
-                        out</button>
-                </form>
-            </div>
+            <form action="/submit" method="post" class="card bg-gray-900 relative px-4 py-8  rounded-3xl col-span-2">
+
+
+                <input id="day" name="day" type="number"
+                    class="absolute text-7xl top-0 font-bold text-gray-700 bg-transparent max-w-xs focus:outline-none"
+                    value="1">
+                <input name="result" type="number"
+                    class="text-center w-full  text-7xl focus:outline-none font-bold text-green-500 bg-transparent "
+                    id="result" value="00" readonly>
+                <div class="flex items-center justify-center space-x-4 mt-6"> <input type="number" id="start"
+                        name="start" placeholder="Start time"
+                        class="text-center border-2 w-1/2 bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none placeholder-gray-400"><input
+                        type="number" id="end" name="end" placeholder="End time"
+                        class="border-2  w-1/2  bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none placeholder-gray-400 text-center">
+                </div>
+
+                <button
+                    class=" py-3 px-6 w-full rounded-full mt-4 text-lg hover:bg-green-500 border-2 border-green-500 transition delay-15">Check
+                    out</button>
+            </form>
+
 
         </div>
 
+    </section>
+    <section>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <%for(var k=0;k< allDays.length;k++){%>
+                <div class="card bg-gray-900 relative px-4 py-8  rounded-3xl">
+
+
+                    <div>
+
+
+                        <p
+                            class="absolute text-7xl top-0 font-bold text-gray-700 bg-transparent max-w-xs focus:outline-none">
+                            <%=allDays[k].day%>
+                        </p>
+                        <p
+                            class="text-2xl text-center text-7xl focus:outline-none font-bold text-green-500 bg-transparent max-w-md mx-auto text-center">
+                            <%=allDays[k].duration%>
+                        </p>
+                        <div class="flex items-center justify-center space-x-4 mt-6">
+                            <p
+                                class="border-2 w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none">
+                                <%=allDays[k].start%>
+                            </p>
+                            <p
+                                class="border-2 w-full bg-gray-700 py-2 px-6 border-transparent fill-current text-gray-200 rounded-full text-2xl focus:outline-none">
+                                <%=allDays[k].end%>
+                            </p>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <% } %>
+        </div>
     </section>
 
     <script>
@@ -68,33 +105,41 @@
 
         function calculateDifference() {
 
+            // const start = document.getElementById("start").value;
+            // const end = document.getElementById("end").value;
+
+            // const startTime = new Date(`01/01/2000 ${start}`);
+            // const endTime = new Date(`01/01/2000 ${end}`);
+
+            // const difference = (endTime.getTime() - startTime.getTime()) / 1000;
+            // const hours = Math.abs(Math.floor(difference / 3600));
+            // const minutes = Math.floor((difference % 3600) / 60);
+
+            // const result = document.getElementById("result");
+            // result.value = ` ${hours}:${minutes}`;
+
             const start = document.getElementById("start").value;
             const end = document.getElementById("end").value;
 
-            const startTime = new Date(`01/01/2000 ${start}`);
-            const endTime = new Date(`01/01/2000 ${end}`);
+            const duration = end - start
 
-            const difference = (endTime.getTime() - startTime.getTime()) / 1000;
-            const hours = Math.abs(Math.floor(difference / 3600));
-            const minutes = Math.floor((difference % 3600) / 60);
+            document.getElementById('result').value = duration
 
-            const result = document.getElementById("result");
-            result.value = ` ${hours}:${minutes}`;
 
 
 
         }
 
-        function durationAdder() {
-            totalHours = document.getElementById('totalHours')
-            totalMinutes = document.getElementById('totalMinutes')
+        // function durationAdder() {
+        //     totalHours = document.getElementById('totalHours')
+        //     totalMinutes = document.getElementById('totalMinutes')
 
-            totalHours += hours;
-            totalMinutes += minutes;
+        //     totalHours += hours;
+        //     totalMinutes += minutes;
 
-            totalHours += Math.floor(totalMinutes / 60);
-            totalMinutes %= 60;
-        }
+        //     totalHours += Math.floor(totalMinutes / 60);
+        //     totalMinutes %= 60;
+        // }
 
 
 
